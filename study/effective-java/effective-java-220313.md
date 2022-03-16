@@ -69,6 +69,7 @@
         Character c3 = new Character('l', "white", fontFactory.getFont("nanum:12"));
     }
     ```
+    [이 글](https://dev-youngjun.tistory.com/217) 을 참고해보자. 😊
 
 
 
