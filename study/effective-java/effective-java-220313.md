@@ -58,7 +58,8 @@
             }
         }
     }
-
+    ```
+    
     Client에서는 기존에 만들어준 인스턴스를 반환해준다. 
     ```java
     public static void main(String[] args) {
@@ -68,13 +69,8 @@
         Character c3 = new Character('l', "white", fontFactory.getFont("nanum:12"));
     }
     ```
-    [이 글](https://dev-youngjun.tistory.com/217) 을 참고
+    [이 글](https://dev-youngjun.tistory.com/217) 을 참고해보자. 😊
 
 ## Item4 : 인스턴스화를 막으려거든 private 생성자를 사용하라.
-    - 없음
-
-
-
-
-
-
+    - 없음 (추가 시 작성해주세요.)
+    
