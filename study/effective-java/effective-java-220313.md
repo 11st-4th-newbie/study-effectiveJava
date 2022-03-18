@@ -68,6 +68,10 @@
         Character c3 = new Character('l', "white", fontFactory.getFont("nanum:12"));
     }
     ```
+    [이 글](https://dev-youngjun.tistory.com/217) 을 참고
+
+## Item4 : 인스턴스화를 막으려거든 private 생성자를 사용하라.
+    - 없음
 
 
 
