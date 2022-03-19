@@ -74,3 +74,32 @@
 ## Item4 : 인스턴스화를 막으려거든 private 생성자를 사용하라.
     - 없음 (추가 시 작성해주세요.)
     
+## Item17 : 변경 가능성을 최소화 해라.
+    - public을 최소한으로 사용해라.
+        - 105p, 마지막 부분 ( public final은 내부 표현을 바꾸지 못하므로 권하지 x) 이게 왜? public 으로 배포된 상태에서는 이미 참조된 관계가 존재할 수 있기 때문에 public -> private 로 바꾸는 식의 수정, 교체, 제거 등의 내부 변경이 어렵게 된다. 
+    - 불변객체의 단점을 해결하기 위해 가변을 동반하는 클래스인 StringBuilder을 만들었다고 하는데 해당 StringBuilder가 어떻게 가변을 만드는가?
+        - StringBuilder 코드를 확인해보면 abstract 에서 직렬화 하는것을 확인해볼 수 있다.
+        `PATH : append > AbstractStringBuilder > putStringAt > inflate`
+        ```java
+            /**
+            * If the coder is "isLatin1", this inflates the internal 8-bit storage
+            * to 16-bit <hi=0, low> pair storage.
+            */
+            private void inflate() {
+                if (!isLatin1()) {
+                    return;
+                }
+                byte[] buf = StringUTF16.newBytesFor(value.length);
+                StringLatin1.inflate(value, 0, buf, 0, count);
+                this.value = buf;
+                this.coder = UTF16;
+            }
+        ```
+    - 불변객체 안에 정적 팩토리 메소드를 사용하는것이 불변성을 깨드리는것이 아닌지 궁금하다.
+        - 하나의 수단으로 접근할 수 있다. 예를 들어서 정적 팩터리 메소드안에 생성자를 구현해서 객체를 생성할 수 있다.
+    - 불변객체에서 개발자는 상태 변경을 하고 싶은데 불변객체이기 때문에 새로운 객체, 즉 상태가 다른 또다른 객체를 생성해내는 메소드가 필요하다. 이때 이 메소드는 정적 팩토리메소드일까? 
+        - 불변객체라는 것 자체가 상태들을 (static이 아닌필드) 가지니까 애초에 static 메소드를 통해 이 값들을 변경할 수도 없음. 그래서 상태 변경을 
+위한 새 객체 반환하는 메소드를 정적 팩토리메소드라고 볼 수는 없고, 최초 객체 생성을 위한 정적팩토리메소드와 이렇게 상태 변경을 원해서 새로운 객체를 생성하는 메소드는 둘을 구분짓고 싶다는 의견이 우세했음
+    - 불변 클래스는 가변 클래스보다 설계하고 구현하고 사용하기 쉽다고 하는데 설계랑 구현이 왜 쉬운가? 
+        - 방어적 복사, 에러 상황에 대한 처리를 많이 고려하지 않아도 된다.  
+
