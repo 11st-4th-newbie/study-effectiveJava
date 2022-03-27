@@ -1,14 +1,12 @@
 ## Item18 : 상속보다는 컴포지션을 사용하라
 
-#### Q. 래퍼클래스랑 일급컬렉션의 차이가 뭐지?
+### Q. 래퍼클래스랑 일급컬렉션의 차이가 뭐지?
 `래퍼클래스(Wrapper Class)`는 프로그램에 따라 기본 타입의 데이터를 객체로 취급해야 하는 경우가 있는데 기본 타입에 해당하는 데이터를 객체로 포장해주는 클래스이다. 
 
 `일급컬렉션`은 Collection을 Wrapping한 래퍼클래스로, 해당 Collection 외 다른 멤버변수가 없는 상태를 말한다. [일급컬렉션이란?](https://jojoldu.tistory.com/412)
 
-#### Q. 상속이랑 컴포지션이랑 뭔 상관?
-:point_right: 상속이 문제가 많으니까 상속보다는 컴포지션을 활용하라는거지, 상속의 문제를 컴포지션으로 해결해라 뭐 이런 이야기는 아니다!
-
-> 상속은 메소드 호출과는 달리 캡슐화를 깨버리거든. 그러니까 조합으로 내부 객체를 갖고 거기서 메소드를 호출해버리자. 캡슐화 깨먹지 말고....
+### Q. 상속이랑 컴포지션이랑 뭔 상관?
+:point_right: 상속이 문제가 많으니까 상속보다는 컴포지션을 활용하라는거지, 상속의 문제를 컴포지션으로 해결해라 뭐 이런 이야기는 아니다! 상속은 메소드 호출과는 달리 캡슐화를 깨버리거든. 그러니까 조합으로 내부 객체를 갖고 거기서 메소드를 호출해버리자. 캡슐화 깨먹지 말고....
 
 ```java
 public class InstrumentedHashSet<E> extends HashSet<E> {
@@ -47,13 +45,16 @@ public class Item18 {
 }
 ```
 ### 위 InstrumentedHashSet에서 발생하는 문제
- - main의 getAddCount가 3을 반환할 것 같았는데, 6을 반환한다.
-   1. InstrumentedHashSet의 addAll은 addCount에 3을 더한 뒤 마지막에 super.addAll을 통해 부모인 HashSet의 addAll을 호출한다.
-   2. 근데 그 부모인 HashSet의 addAll은 아래에 코드를 첨부했는데, 구현 내용을 보면 각 원소를 add 메소드를 호룰해서 추가하고 있다. 
-   ![img.png](img.png)
-   3. 그래서 그 add를 호출하려고 봤더니 InstrumentedHashSet이 그 add를 오버라이드(재정의) 해놓은거야! 그럼 얘가 호출되겠지?!
-   4. 위 코드에서 보이다시피 InstrumentedHashSet이 재정의한 HashSet의 add은 addCount를 더해주고 있어. 
-   5. 이렇게 재정의된 메소드로서 add가 세 번 실행이 되니까 addCount가 최종적으로 6이 되는거야!
+
+main의 getAddCount가 3을 반환할 것 같았는데, 6을 반환한다.
+
+1. InstrumentedHashSet의 addAll은 addCount에 3을 더한 뒤 마지막에 super.addAll을 통해 부모인 HashSet의 addAll을 호출한다.
+2. 근데 그 부모인 HashSet의 addAll은 아래에 코드를 첨부했는데, 구현 내용을 보면 각 원소를 add 메소드를 호룰해서 추가하고 있다. 
+<img width="676" alt="image" src="https://user-images.githubusercontent.com/35680213/160293969-2981a243-5f07-46ba-a649-ac1e8b22859e.png">
+3. 그래서 그 add를 호출하려고 봤더니 InstrumentedHashSet이 그 add를 오버라이드(재정의) 해놓은거야! 그럼 얘가 호출되겠지?!
+4. 위 코드에서 보이다시피 InstrumentedHashSet이 재정의한 HashSet의 add은 addCount를 더해주고 있어. 
+5. 이렇게 재정의된 메소드로서 add가 세 번 실행이 되니까 addCount가 최종적으로 6이 되는거야!
+
 
 *위처럼 HashSet을 바로 상속하면 그냥 HashSet이 내부에서 자신(HashSet)의 add를 호출하더라도 그게 호출되지 않고 자식이 재정의한 add가 호출되는거임.
 이미 내가 HashSet의 메소드인 add를 오버라이드해놔서 자꾸만 재정의된 이 메소드가 호출되고 있다.
